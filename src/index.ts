@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config";
+import { jwtSecretKey } from "../environment";
 
 
 const payload: jwt.JwtPayload = {
@@ -7,7 +8,6 @@ const payload: jwt.JwtPayload = {
   sub: "Vaibhav-G",
 };
 
-const jwtSecretKey = process.env.SECRET_KEY;
 
 console.log(jwtSecretKey);
 
