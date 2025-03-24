@@ -1,32 +1,7 @@
-import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { jwtSecretKey } from "../environment";
+import { hono } from "./routes"; // Ensure hono is exported from routes.ts
+import { serve } from "@hono/node-server";
 
-
-const payload: jwt.JwtPayload = {
-  iss: "https://purpleshorts.co.in",
-  sub: "Vaibhav-G",
-};
-
-
-console.log(jwtSecretKey);
-
-if (!jwtSecretKey) {
-  throw new Error("undefined");
-}
-
-const token = jwt.sign(payload, jwtSecretKey, {
-  algorithm: "HS256",
+serve(hono, (info) => {
+  console.log(`Server is running on port ${info.port}`);
 });
-
-
-console.log(token);
-
-try {
-  const decodedPayload = jwt.verify(token, jwtSecretKey);
-  console.log(decodedPayload);
-}
-catch (e) {
-  console.log("error",e);
-}
-
