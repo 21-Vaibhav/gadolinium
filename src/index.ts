@@ -7,15 +7,15 @@ const payload: jwt.JwtPayload = {
   sub: "Vaibhav-G",
 };
 
-const secretKey = process.env.SECRET_KEY;
+const jwtSecretKey = process.env.SECRET_KEY;
 
-console.log(secretKey);
+console.log(jwtSecretKey);
 
-if (!secretKey) {
+if (!jwtSecretKey) {
   throw new Error("undefined");
 }
 
-const token = jwt.sign(payload, secretKey, {
+const token = jwt.sign(payload, jwtSecretKey, {
   algorithm: "HS256",
 });
 
@@ -23,7 +23,7 @@ const token = jwt.sign(payload, secretKey, {
 console.log(token);
 
 try {
-  const decodedPayload = jwt.verify(token, secretKey);
+  const decodedPayload = jwt.verify(token, jwtSecretKey);
   console.log(decodedPayload);
 }
 catch (e) {
