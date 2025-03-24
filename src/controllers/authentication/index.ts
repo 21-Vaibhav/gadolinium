@@ -1,13 +1,12 @@
 import type { User } from "@prisma/client";
 import { createHash } from "crypto";
-import { sign, type JwtPayload} from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 import { jwtSecretKey } from "../../../environment";
 
 import {
   SignUpWithUsernameAndPasswordError,
   type SignUpWithUsernameAndPasswordResult,
 } from "./+type";
-import { Sign } from "crypto";
 import { prismaClient } from "../../../extras/prisma";
 
 export const signUpWithUsernameAndPassword = async (parameters: {
@@ -20,41 +19,36 @@ export const signUpWithUsernameAndPassword = async (parameters: {
         username: parameters.username,
       },
     });
+
     if (existingUser) {
       throw SignUpWithUsernameAndPasswordError.CONFLICTING_USERNAME;
     }
 
-    const passwordHash = createHash("sha256").update(parameters.password).
-    digest("hex");
+    const passwordHash = createHash("sha256")
+      .update(parameters.password)
+      .digest("hex");
+
     const user = await prismaClient.user.create({
-        data: {
-            username: parameters.username,
-            password: passwordHash,
-        },
-        });
-
-    //Generate token
-
-    const jwtPayload: JwtPayload = {
-        iss: "https://purpleshorts.co.in",
-        sub: user.id,
-        username: user.username,
-    };
-
-    const token = sign(jwtPayload, jwtSecretKey, {
-        expiresIn: "30d",
+      data: {
+        username: parameters.username,
+        password: passwordHash,
+      },
     });
 
-    const result: SignUpWithUsernameAndPasswordResult = {
-        token,
-        user,
+    // Generate token
+    const jwtPayload: JwtPayload = {
+      iss: "https://purpleshorts.co.in",
+      sub: user.id,
+      username: user.username,
     };
 
-    return result;
+    const token = jwt.sign(jwtPayload, String(jwtSecretKey), {
+      expiresIn: "30d",
+    });
 
+    return { token, user };
   } catch (e) {
-    console.log("error", e);
+    console.error("Error in signUpWithUsernameAndPassword:", e);
     throw SignUpWithUsernameAndPasswordError.UNKNOWN;
   }
 };
-

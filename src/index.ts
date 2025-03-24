@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { hono } from "./routes"; // Ensure hono is exported from routes.ts
+import { hono } from "./routes";
 import { serve } from "@hono/node-server";
 
 serve(hono, (info) => {
