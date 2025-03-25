@@ -2,11 +2,11 @@ import { Hono } from "hono";
 import {
   logInWithUsernameAndPassword,
   signUpWithUsernameAndPassword,
-} from "../controllers/authentication";
+} from "../controllers/authentication/authentication-controller";
 import {
   LogInWtihUsernameAndPasswordError,
   SignUpWithUsernameAndPasswordError,
-} from "../controllers/authentication/+type";
+} from "../controllers/authentication/authentication-types";
 
 export const hono = new Hono();
 
@@ -45,19 +45,19 @@ hono.post("/authentication/sign-up", async (context) => {
 });
 
 hono.post("/authentication/log-in", async (context) => {
-    const { username, password } = await context.req.json();
+  const { username, password } = await context.req.json();
 
-    const result = await logInWithUsernameAndPassword({
-      username,
-      password,
-    });
+  const result = await logInWithUsernameAndPassword({
+    username,
+    password,
+  });
 
-    return context.json(
-      {
-        data: result,
-      },
-      201
-    );
+  return context.json(
+    {
+      data: result,
+    },
+    201
+  );
 });
 
 hono.get("/health", (context) => {
