@@ -95,7 +95,6 @@ export const logInWithUsernameAndPassword = async (parameters: {
   username: string;
   password: string;
 }): Promise<LogInWithUsernameAndPasswordResult> => {
-  try {
     // 1. Create the password hash
     const passwordHash = createPasswordHash({
       password: parameters.password,
@@ -124,8 +123,4 @@ export const logInWithUsernameAndPassword = async (parameters: {
       token,
       user,
     };
-  } catch (e) {
-    console.log("Error", e);
-    throw LogInWtihUsernameAndPasswordError.UNKNOWN;
-  }
 };

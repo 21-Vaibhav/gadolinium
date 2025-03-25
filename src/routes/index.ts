@@ -45,7 +45,6 @@ hono.post("/authentication/sign-up", async (context) => {
 });
 
 hono.post("/authentication/log-in", async (context) => {
-  try {
     const { username, password } = await context.req.json();
 
     const result = await logInWithUsernameAndPassword({
@@ -59,25 +58,6 @@ hono.post("/authentication/log-in", async (context) => {
       },
       201
     );
-  } catch (e) {
-    if (
-      e === LogInWtihUsernameAndPasswordError.INCORRECT_USERNAME_OR_PASSWORD
-    ) {
-      return context.json(
-        {
-          message: "Incorrect username or password",
-        },
-        401
-      );
-    }
-
-    return context.json(
-      {
-        message: "Unknown",
-      },
-      500
-    );
-  }
 });
 
 hono.get("/health", (context) => {
